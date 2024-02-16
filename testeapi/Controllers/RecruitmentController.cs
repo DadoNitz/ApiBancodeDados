@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using apibase.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,15 +47,34 @@ namespace apibase.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutRecruitment(int id, Recruitment recruitment)
+        public IActionResult PutRecruitment(int id, Recruitment updatedRecruitment)
         {
-            if (id != recruitment.ID)
+            var existingRecruitment = _context.Recruitment.Find(id);
+            if (existingRecruitment == null)
+            {
+                return NotFound();
+            }
+
+            // Verifica se os IDs correspondem
+            if (id != updatedRecruitment.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(recruitment).State = EntityState.Modified;
-            _context.SaveChanges();
+            // Atualiza apenas os campos necessários
+            existingRecruitment.Exportador = updatedRecruitment.Exportador;
+            existingRecruitment.Importador = updatedRecruitment.Importador;
+            // Atualize os outros campos conforme necessário...
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Pode ser necessário lidar com exceções de concorrência aqui
+                return StatusCode(StatusCodes.Status409Conflict, "A entidade foi modificada por outra operação.");
+            }
 
             return NoContent();
         }
