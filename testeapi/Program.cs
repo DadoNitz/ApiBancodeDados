@@ -6,7 +6,6 @@ using MySql.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adicione serviços ao contêiner.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -16,7 +15,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-// Configurar o pipeline de solicitação HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

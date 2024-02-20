@@ -55,16 +55,13 @@ namespace apibase.Controllers
                 return NotFound();
             }
 
-            // Verifica se os IDs correspondem
             if (id != updatedRecruitment.ID)
             {
                 return BadRequest();
             }
 
-            // Atualiza apenas os campos necessários
             existingRecruitment.Exportador = updatedRecruitment.Exportador;
             existingRecruitment.Importador = updatedRecruitment.Importador;
-            // Atualize os outros campos conforme necessário...
 
             try
             {
@@ -72,7 +69,6 @@ namespace apibase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                // Pode ser necessário lidar com exceções de concorrência aqui
                 return StatusCode(StatusCodes.Status409Conflict, "A entidade foi modificada por outra operação.");
             }
 
